@@ -23,11 +23,11 @@ const Pagination = ({ page, totalOfPages }) => {
     setCurrentPage(p)
   }, [setCurrentPage])
 
-  const renderAllPages = () => pages.slice(0, n - 1).map((page, index) => (
+  const renderAllPages = () => pages.map((page, index) => (
     <li onClick={handleChangePage(page)} style={selectedIndexStyle(index)}>
       {page}
     </li>
-  ))
+  ));
 
   const renderFirstFourPagesPlusThreeDotsAndLastPage = () => (
     <>
@@ -91,7 +91,7 @@ const Pagination = ({ page, totalOfPages }) => {
     if (currentPage > totalOfPages - (n - 1))
       return renderFirstPagePlusThreeDotsAndLastPageFourPages()
     return render()
-  }, [pages, currentPage])
+  }, [pages, currentPage, totalOfPages])
 
   useEffect(() => {
     const list = [];
