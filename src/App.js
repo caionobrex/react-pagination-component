@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import "./styles.css";
 
-const Pagination = ({ page }) => {
-  const totalOfPages = 20;
-  const [currentPage, setCurrentPage] = useState(1);
+const Pagination = ({ page, totalOfPages }) => {
+  const [currentPage, setCurrentPage] = useState(page | 1);
   const [pages, setPages] = useState([]);
-  const n = 9;
+  const n = 5;
   const selectedIndexStyle = (index) => ({
     backgroundColor: index === currentPage - 1 ? "red" : "transparent"
   });
@@ -19,6 +18,70 @@ const Pagination = ({ page }) => {
     if (currentPage > totalOfPages) return;
     setCurrentPage((current) => current + 1);
   }, [setCurrentPage, currentPage]);
+
+  const renderAllPages = () => pages.slice(0, n - 1).map((page, index) => (
+    <li style={selectedIndexStyle(index)}>{page}</li>
+  ))
+
+  const renderFirstFourPagesPlusThreeDotsAndLastPage = () => (
+    <>
+      {pages.slice(0, n - 1).map((page, index) => (
+        <li style={selectedIndexStyle(index)}>{page}</li>
+      ))}
+      <li>...</li>
+      <li>{totalOfPages}</li>
+    </>
+  )
+
+  const renderFirstPagePlusThreeDotsAndLastPageFourPages = () => (
+    <>
+      <li>1</li>
+      <li>...</li>
+      {pages
+        .slice(pages.length - (n - 1), pages.length)
+        .map((page, index) => (
+          <li
+            style={selectedIndexStyle(totalOfPages - (n - 1) + index)}
+          >
+            {page}
+          </li>
+        ))}
+    </>
+  )
+
+  const render = () => (
+    <>
+      <li>1</li>
+      <li>...</li>
+      {pages
+        .slice(
+          currentPage - (n - 1) / 2,
+          currentPage + ((n - 1) / 2 + 1)
+        )
+        .map((page, index) => (
+          <li
+            style={{
+              backgroundColor:
+                index === (n - 1) / 2 ? "red" : "transparent"
+            }}
+          >
+            {page}
+          </li>
+        ))}
+      <li>...</li>
+      <li>{totalOfPages}</li>
+    </>
+  )
+
+  const renderContentBasedOnConditions = useCallback(() => {
+    if (pages.length < n)
+      return renderAllPages()
+    if (currentPage < n)
+      return renderFirstFourPagesPlusThreeDotsAndLastPage()
+    if (currentPage > totalOfPages - (n - 1))
+      return renderFirstPagePlusThreeDotsAndLastPageFourPages()
+    return render()
+  }, [pages, currentPage])
 
   useEffect(() => {
     const list = [];
@@ -38,59 +101,7 @@ const Pagination = ({ page }) => {
           padding: 0
         }}
       >
-        {pages.length < n ? (
-          pages.map((page, index) => (
-            <li style={selectedIndexStyle(index)}>{page}</li>
-          ))
-        ) : (
-          <>
-            {currentPage < n ? (
-              <>
-                {pages.slice(0, n - 1).map((page, index) => (
-                  <li style={selectedIndexStyle(index)}>{page}</li>
-                ))}
-                <li>...</li>
-                <li>{totalOfPages}</li>
-              </>
-            ) : currentPage > totalOfPages - (n - 1) ? (
-              <>
-                <li>1</li>
-                <li>...</li>
-                {pages
-                  .slice(pages.length - (n - 1), pages.length)
-                  .map((page, index) => (
-                    <li
-                      style={selectedIndexStyle(totalOfPages - (n - 1) + index)}
-                    >
-                      {page}
-                    </li>
-                  ))}
-              </>
-            ) : (
-              <>
-                <li>1</li>
-                <li>...</li>
-                {pages
-                  .slice(
-                    currentPage - (n - 1) / 2,
-                    currentPage + ((n - 1) / 2 + 1)
-                  )
-                  .map((page, index) => (
-                    <li
-                      style={{
-                        backgroundColor:
-                          index === (n - 1) / 2 ? "red" : "transparent"
-                      }}
-                    >
-                      {page}
-                    </li>
-                  ))}
-                <li>...</li>
-                <li>{totalOfPages}</li>
-              </>
-            )}
-          </>
-        )}
+        {renderContentBasedOnConditions()}
       </ul>
       {currentPage !== totalOfPages && (
         <button onClick={handleNextPage}>next</button>
@@ -102,7 +113,7 @@ const Pagination = ({ page }) => {
 export default function App() {
   return (
     <div className="App">
-      <Pagination />
+      <Pagination totalOfPages={20} />
     </div>
   );
 }
