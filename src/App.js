@@ -19,28 +19,37 @@ const Pagination = ({ page, totalOfPages }) => {
     setCurrentPage((current) => current + 1);
   }, [setCurrentPage, currentPage]);
 
+  const handleChangePage = useCallback((p) => () => {
+    setCurrentPage(p)
+  }, [setCurrentPage])
+
   const renderAllPages = () => pages.slice(0, n - 1).map((page, index) => (
-    <li style={selectedIndexStyle(index)}>{page}</li>
+    <li onClick={handleChangePage(page)} style={selectedIndexStyle(index)}>
+      {page}
+    </li>
   ))
 
   const renderFirstFourPagesPlusThreeDotsAndLastPage = () => (
     <>
       {pages.slice(0, n - 1).map((page, index) => (
-        <li style={selectedIndexStyle(index)}>{page}</li>
+        <li onClick={handleChangePage(page)} style={selectedIndexStyle(index)}>
+          {page}
+        </li>
       ))}
       <li>...</li>
-      <li>{totalOfPages}</li>
+      <li onClick={handleChangePage(totalOfPages)}>{totalOfPages}</li>
     </>
   )
 
   const renderFirstPagePlusThreeDotsAndLastPageFourPages = () => (
     <>
-      <li>1</li>
+      <li onClick={handleChangePage(1)}>1</li>
       <li>...</li>
       {pages
         .slice(pages.length - (n - 1), pages.length)
         .map((page, index) => (
           <li
+            onClick={handleChangePage(page)}
             style={selectedIndexStyle(totalOfPages - (n - 1) + index)}
           >
             {page}
@@ -51,7 +60,7 @@ const Pagination = ({ page, totalOfPages }) => {
 
   const render = () => (
     <>
-      <li>1</li>
+      <li onClick={handleChangePage(1)}>1</li>
       <li>...</li>
       {pages
         .slice(
@@ -60,6 +69,7 @@ const Pagination = ({ page, totalOfPages }) => {
         )
         .map((page, index) => (
           <li
+            onClick={handleChangePage(page)}
             style={{
               backgroundColor:
                 index === (n - 1) / 2 ? "red" : "transparent"
@@ -69,7 +79,7 @@ const Pagination = ({ page, totalOfPages }) => {
           </li>
         ))}
       <li>...</li>
-      <li>{totalOfPages}</li>
+      <li onClick={handleChangePage(totalOfPages)}>{totalOfPages}</li>
     </>
   )
 
