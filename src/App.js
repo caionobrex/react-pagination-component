@@ -41,7 +41,7 @@ const Pagination = ({ page, totalOfPages }) => {
     </>
   )
 
-  const renderFirstPagePlusThreeDotsAndLastPageFourPages = () => (
+  const renderFirstPagePlusThreeDotsAndLastFourPages = () => (
     <>
       <li onClick={handleChangePage(1)}>1</li>
       <li>...</li>
