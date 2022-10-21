@@ -89,7 +89,7 @@ const Pagination = ({ page, totalOfPages }) => {
     if (currentPage < n)
       return renderFirstFourPagesPlusThreeDotsAndLastPage()
     if (currentPage > totalOfPages - (n - 1))
-      return renderFirstPagePlusThreeDotsAndLastPageFourPages()
+      return renderFirstPagePlusThreeDotsAndLastFourPages()
     return render()
   }, [pages, currentPage, totalOfPages])
 
